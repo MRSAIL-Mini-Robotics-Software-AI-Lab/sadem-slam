@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+	<param name="/left_image_topic"  value="/zed/left/image"/>
+	<param name="/right_image_topic"  value="/zed/right/image"/>
+	<node name = "orb_slam" pkg = "sadem_slam" type = "orb_slam.py" output="screen"/>
+</launch>
