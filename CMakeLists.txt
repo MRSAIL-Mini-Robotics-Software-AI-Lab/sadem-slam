@@ -20,5 +20,5 @@ include_directories(${catkin_INCLUDE_DIRS})
 
 # catkin_python_setup()
 
-catkin_install_python(PROGRAMS nodes/zed_pub.py nodes/orb_slam.py DESTINATION
+catkin_install_python(PROGRAMS nodes/zed_pub.py nodes/zed_sdk_pub.py nodes/orb_slam.py DESTINATION
                       ${CATKIN_PACKAGE_BIN_DESTINATION})
