@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+	<param name="/left_image_topic"  value="/zed/left/image"/>
+	<param name="/right_image_topic"  value="/zed/right/image"/>
+	<node name = "zed_sdk_pub" pkg = "sadem_slam" type = "zed_sdk_pub.py" output="screen"/>
+</launch>
