@@ -5,7 +5,8 @@ import rospy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import pyzed.sl as sl
-
+import time
+import numpy as np
 
 def stereo_camera_publisher():
     # Initialize the ROS node
@@ -21,14 +22,18 @@ def stereo_camera_publisher():
     bridge = CvBridge()
 
     capture = cv2.VideoCapture(0)
-    # capture.set(3, 672*2)
-    # capture.set(4, 376)
-    capture.set(3, 1280*2)
-    capture.set(4, 720)
-    capture.set(cv2.CAP_PROP_FPS, 60)
+    capture.set(3, 672*2)
+    capture.set(4, 376)
+    capture.set(cv2.CAP_PROP_FPS, 15)
+    # capture.set(3, 1280*2)
+    # capture.set(4, 720)
+    # capture.set(cv2.CAP_PROP_FPS, 60)
 
+    to_save_folder = "/media/nvidia/K/zed_data/mav0"
+    timestamp_file = "/home/nvidia/SADEM/catkin_ws/src/sadem_slam/zed_timestamps.txt"
+    timestamps = []
     
-    rate = rospy.Rate(15)
+    rate = rospy.Rate(10)
     while not rospy.is_shutdown():
         ret, frame = capture.read()
 
@@ -41,6 +46,13 @@ def stereo_camera_publisher():
             # print(left_image.shape)
             left_image = cv2.resize(left_image, (672,376))
             right_image = cv2.resize(right_image, (672,376))
+            # timestamp = int(time.time()*1000000000)
+            gry_left_image = cv2.cvtColor(left_image, cv2.COLOR_BGR2GRAY)
+            gry_right_image = cv2.cvtColor(right_image, cv2.COLOR_BGR2GRAY)
+            # cv2.imwrite(to_save_folder+"/cam0/data/"+str(timestamp)+".png", gry_left_image)
+            # cv2.imwrite(to_save_folder+"/cam1/data/"+str(timestamp)+".png", gry_right_image)
+            # timestamps.append(timestamp)
+            # np.savetxt(timestamp_file, timestamps, fmt="%i")
 
             # Convert the left and right images to ROS messages
             left_image_msg = bridge.cv2_to_imgmsg(left_image, encoding="bgr8")
