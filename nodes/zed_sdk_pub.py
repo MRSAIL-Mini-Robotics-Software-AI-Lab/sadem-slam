@@ -22,8 +22,8 @@ def stereo_camera_publisher():
     
     zed = sl.Camera()
     init_params = sl.InitParameters()
-    init_params.camera_resolution = sl.RESOLUTION.VGA
-    init_params.camera_fps = 100
+    init_params.camera_resolution = sl.RESOLUTION.HD1080
+    init_params.camera_fps = 15
     err = zed.open(init_params)
     if err != sl.ERROR_CODE.SUCCESS:
         print(err)
@@ -39,10 +39,15 @@ def stereo_camera_publisher():
         if zed.grab() == sl.ERROR_CODE.SUCCESS:
             zed.retrieve_image(imgLeft, sl.VIEW.LEFT)
             zed.retrieve_image(imgRight, sl.VIEW.RIGHT)
+            img_l = imgLeft.get_data()[:, :, :3]
+            img_r = imgRight.get_data()[:, :, :3]
+
+            img_l = cv2.resize(img_l, (672,376))
+            img_r = cv2.resize(img_r, (672,376))
             
             # Convert the left and right images to ROS messages
-            left_image_msg = bridge.cv2_to_imgmsg(imgLeft.get_data()[:, :, :3], encoding="bgr8")
-            right_image_msg = bridge.cv2_to_imgmsg(imgRight.get_data()[:, :, :3], encoding="bgr8")
+            left_image_msg = bridge.cv2_to_imgmsg(img_l, encoding="bgr8")
+            right_image_msg = bridge.cv2_to_imgmsg(img_r, encoding="bgr8")
 
             # Publish the left and right images
             left_image_pub.publish(left_image_msg)
